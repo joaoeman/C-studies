@@ -184,7 +184,7 @@ void fusionremove(tree *t){
     tree aux = *t;
     if(!(*t))
         exit(7);
-    
+
     if(father(*t)){
         if(!(left(*t) && right(*t))){
             free(aux);
@@ -207,6 +207,42 @@ void fusionremove(tree *t){
 
             aux->right = aux2->right;
             free(aux2);
+        }
+        }
+    }
+}
+
+void copyremove(tree *t){
+    tree aux = *t;
+    if(!(*t))
+        exit(7);
+
+    if(father(*t)){
+        if(!(left(*t) && right(*t))){
+            free(aux);
+        }
+        else {
+        if((!left(*t) && right(*t)) || (left(*t) && !right(*t))){
+            if(left(*t))
+                left(*t)->father = (*t)->father;
+            else
+                right(*t)->father = (*t)->father;
+        free(aux);
+        }
+        else{
+            tree aux2 = aux;
+            aux = aux->right; 
+            aux->father = NULL;
+
+            while(aux->left)
+                aux = aux->left;
+            
+            aux->father = aux->father->left = NULL;
+            aux->left = aux2->left;
+            aux->right = aux2->right;
+
+            free(aux2);
+            *t = aux;
         }
         }
     }
