@@ -179,3 +179,35 @@ void ins_ele(tree *t, int valor){
         }while(1);
     }
 }
+
+void fusionremove(tree *t){
+    tree aux = *t;
+    if(!(*t))
+        exit(7);
+    
+    if(father(*t)){
+        if(!(left(*t) && right(*t))){
+            free(aux);
+        }
+        else {
+        if((!left(*t) && right(*t)) || (left(*t) && !right(*t))){
+            if(left(*t))
+                left(*t)->father = (*t)->father;
+            else
+                right(*t)->father = (*t)->father;
+        free(aux);
+        }
+        else{
+            tree aux2 = aux;
+            aux = aux->left; 
+            aux->father = NULL;
+
+            while(aux->right)
+                aux = aux->right;
+
+            aux->right = aux2->right;
+            free(aux2);
+        }
+        }
+    }
+}
