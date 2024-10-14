@@ -137,113 +137,97 @@ void preordem(tree t) {
   }
 }
 
-void inordem(tree t){
-    if(t){
-        preordem(left(t));
-        printf("%d\n", info(t));
-        preordem(right(t));
-    }
+void inordem(tree t) {
+  if (t) {
+    preordem(left(t));
+    printf("%d\n", info(t));
+    preordem(right(t));
+  }
 }
 
-void posordem(tree t){
-    if(t){
-        preordem(left(t));
-        preordem(right(t));
-        printf("%d\n", info(t));
-    }
-
+void posordem(tree t) {
+  if (t) {
+    preordem(left(t));
+    preordem(right(t));
+    printf("%d\n", info(t));
+  }
 }
 
-void ins_ele(tree *t, int valor){
-    if(!(*t))
-        maketree(t,valor);
-    else{
-        tree father = *t;
-        do{
-            if(valor<father->info){
-                if(father->father)
-                    father = father->left;
-                else{
-                    setleft(father,valor);
-                    break;
-                }
-            }
-            else{
-                if(father->right)
-                    father = father->right;
-                else{
-                    setright(father,valor);
-                    break;
-                }
-            }
-        }while(1);
-    }
-}
-
-void fusionremove(tree *t){
-    tree aux = *t;
-    if(!(*t))
-        exit(7);
-
-    if(father(*t)){
-        if(!(left(*t) && right(*t))){
-            free(aux);
-        }
+void ins_ele(tree *t, int valor) {
+  if (!(*t))
+    maketree(t, valor);
+  else {
+    tree father = *t;
+    do {
+      if (valor < father->info) {
+        if (father->father)
+          father = father->left;
         else {
-        if((!left(*t) && right(*t)) || (left(*t) && !right(*t))){
-            if(left(*t))
-                left(*t)->father = (*t)->father;
-            else
-                right(*t)->father = (*t)->father;
-        free(aux);
+          setleft(father, valor);
+          break;
         }
-        else{
-            tree aux2 = aux;
-            aux = aux->left; 
-            aux->father = NULL;
-
-            while(aux->right)
-                aux = aux->right;
-
-            aux->right = aux2->right;
-            free(aux2);
+      } else {
+        if (father->right)
+          father = father->right;
+        else {
+          setright(father, valor);
+          break;
         }
-        }
-    }
+      }
+    } while (1);
+  }
 }
 
-void copyremove(tree *t){
+void fusionremove(tree *t) {
+  if (*t) {
     tree aux = *t;
-    if(!(*t))
-        exit(7);
-
-    if(father(*t)){
-        if(!(left(*t) && right(*t))){
-            free(aux);
-        }
-        else {
-        if((!left(*t) && right(*t)) || (left(*t) && !right(*t))){
-            if(left(*t))
-                left(*t)->father = (*t)->father;
-            else
-                right(*t)->father = (*t)->father;
-        free(aux);
-        }
-        else{
-            tree aux2 = aux;
-            aux = aux->right; 
-            aux->father = NULL;
-
-            while(aux->left)
-                aux = aux->left;
-            
-            aux->father = aux->father->left = NULL;
-            aux->left = aux2->left;
-            aux->right = aux2->right;
-
-            free(aux2);
-            *t = aux;
-        }
-        }
+    if (!(*t)->right) {
+      if ((*t)->left) {
+        (*t)->left->father = (*t)->father;
+        *t = (*t)->left;
+      }
+    } else if ((*t)->left == NULL) {
+      (*t)->right->father = (*t)->father;
+      *t = (*t)->right;
+    } else {
+      aux = (*t)->left;
+      while (aux->right)
+        aux = aux->right;
+      aux->right = (*t)->right;
+      aux->right->father = aux;
+      aux = *t;
+      *t = (*t)->left;
     }
+    free(aux);
+  }
+}
+
+void copyremove(tree *t) {
+  tree aux = *t;
+  if (!(*t)) {
+    if (!(*t)->right) {
+      if ((*t)->left) {
+        (*t)->left->father = (*t)->father;
+        *t = (*t)->left;
+      }
+    } else if ((*t)->left == NULL) {
+      (*t)->right->father = (*t)->father;
+      *t = (*t)->right;
+    } else {
+      aux = (*t)->right;
+      while (aux->left)
+        aux = aux->left;
+      (*t)->info = aux->info;
+      if (aux->father == *t) {
+        aux->father->right = aux->right;
+        if (aux->father->right)
+          aux->father->right->father = aux->right;
+      } else {
+        aux->father->left = aux->right;
+        if (aux->father->left)
+          aux->father->left->father = aux->father;
+      }
+    }
+    free(aux);
+  }
 }

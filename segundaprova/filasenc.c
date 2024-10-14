@@ -7,8 +7,8 @@ typedef struct nodo{
 }NODO;
 
 typedef struct{
-    NODO *inicio;
     NODO *fim;
+    NODO *inicio;
 }descritor;
 
 typedef descritor * filaenc;
