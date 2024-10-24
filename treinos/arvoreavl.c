@@ -44,8 +44,28 @@ void rotacao_esquerda(tree_avl *t){
         else   
             (*t)->altd = (*t)->right->altd+1;
     }
-    if((*t)->right->altd>(*t)->right->alte)
-        (*t)->altd = (*t)->right->altd+1;
+    if((*t)->left->altd>(*t)->left->alte)
+        (*t)->alte = (*t)->right->altd+1;
     else
-        (*t)->altd = (*t)->right->alte+1;
+        (*t)->alte = (*t)->right->alte+1;
+    *t = aux1;
+}
+
+void balanceamento(tree_avl *t){
+    int pai,filho;
+    pai = (*t)->altd - (*t)->alte;
+    if(pai == 2){
+        filho = (*t)->right->altd - (*t)->right->alte;
+        if(filho < 0)
+            rotacao_direita(&((*t)->right));
+        rotacao_esquerda(t);
+    }
+    else{
+        if(pai == -2){
+            filho = (*t)->left->altd - (*t)->left->alte;
+            if(filho >= 0)
+                rotacao_esquerda(&((*t)->left));
+            rotacao_direita(t);
+        }
+    }
 }
