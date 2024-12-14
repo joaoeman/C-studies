@@ -244,5 +244,3 @@ void copyremove(tree *t){
         
     }
 }
-
-void rotacaodireita(tree *t){}
